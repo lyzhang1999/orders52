@@ -24,7 +24,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
+      - name: Set output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
       - name: Log in to the Container registry
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
@@ -56,11 +58,14 @@ jobs:
         with:
           cmd: yq -i '.image.tag = "${{ steps.meta.outputs.tags }}"' 'values.yaml'
       - name: Update helm repo
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
               git config user.email "${{ env.EMAIL }}"
               git config user.name "${{ env.ORG }}"
               git remote set-url origin https://${{ env.ORG }}:${{ secrets.PERSONAL_TOKEN }}@github.com/${{ env.ORG }}/${{ env.HELM_REPO }}.git
+              git remote -vv
               git add .
-              git commit -m "update images tag ${{ steps.meta.outputs.tags }}"
+              git commit -m "update images tag ${{ RELEASE_VERSION }}"
               git push
         
