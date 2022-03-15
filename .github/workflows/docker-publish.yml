@@ -58,14 +58,12 @@ jobs:
         with:
           cmd: yq -i '.image.tag = "${{ steps.meta.outputs.tags }}"' 'values.yaml'
       - name: Update helm repo
-        env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
               git config user.email "${{ env.EMAIL }}"
               git config user.name "${{ env.ORG }}"
               git remote set-url origin https://${{ env.ORG }}:${{ secrets.PERSONAL_TOKEN }}@github.com/${{ env.ORG }}/${{ env.HELM_REPO }}.git
               git remote -vv
               git add .
-              git commit -m "update images tag ${{ RELEASE_VERSION }}"
+              git commit -m "update images tag ${{ steps.vars.outputs.tag }}
               git push
         
