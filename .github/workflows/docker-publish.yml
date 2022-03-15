@@ -57,7 +57,7 @@ jobs:
       - name: Update helm values
         uses: mikefarah/yq@master
         with:
-          cmd: yq -i '.image.tag = "${{ steps.meta.outputs.tags }}"' 'values.yaml'
+          cmd: yq -i '.image.tag = "${{ steps.vars.outputs.tag }}"' 'values.yaml'
       - name: Update helm repo
         run: |
               git config user.email "h8r@robot.dev"
