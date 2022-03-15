@@ -56,11 +56,15 @@ jobs:
         uses: mikefarah/yq@master
         with:
           cmd: yq -i '.image.tag = "${{ steps.meta.outputs.tags }}"' 'values.yaml'
+      - name: Reset github credentials
+        uses: oleksiyrudenko/gha-git-credentials@v2-latest
+        with:
+          token: '${{ secrets.PAT }}'
       - name: Update helm repo
         run: |
               git config user.email "h8r@robot.dev"
               git config user.name "h8r-robot"
-              git remote set-url origin https://${{ env.ORG }}:${{ secrets.PAT }}@github.com/${{ env.ORG }}/${{ env.HELM_REPO }}.git
+              #git remote set-url origin https://${{ env.ORG }}:${{ secrets.PAT }}@github.com/${{ env.ORG }}/${{ env.HELM_REPO }}.git
               git add .
               git commit -m "update images tag ${{ steps.vars.outputs.tag }}"
               git push
