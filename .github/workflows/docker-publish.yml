@@ -12,7 +12,6 @@ env:
   IMAGE_NAME: ${{ github.repository }}
   ORG: lyzhang1999
   HELM_REPO: orders52-helm
-  EMAIL: 434533508@qq.com
 
 jobs:
   build-and-push-image:
@@ -53,17 +52,20 @@ jobs:
         with:
           repository: ${{ env.ORG }}/${{ env.HELM_REPO }}
           ref: refs/heads/main
-          token: ${{ secrets.PERSONAL_TOKEN }}
       - name: Update helm values
         uses: mikefarah/yq@master
         with:
           cmd: yq -i '.image.tag = "${{ steps.meta.outputs.tags }}"' 'values.yaml'
       - name: Update helm repo
         run: |
-              #git config user.email "${{ env.EMAIL }}"
-              #git config user.name "${{ env.ORG }}"
+              git config user.email "h8r@robot.io"
+              git config user.name "h8r-robot"
               #git remote set-url origin https://${{ env.ORG }}:${{ secrets.PERSONAL_TOKEN }}@github.com/${{ env.ORG }}/${{ env.HELM_REPO }}.git
               git add .
               git commit -m "update images tag ${{ steps.vars.outputs.tag }}"
-              git push
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.PERSONAL_TOKEN }}
+          branch: ${{ github.ref }}
         
