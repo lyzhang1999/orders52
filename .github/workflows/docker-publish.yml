@@ -57,7 +57,6 @@ jobs:
           cmd: yq -i '.image.tag = "${{ steps.meta.outputs.tags }}"' 'values.yaml'
       - name: Update helm repo
         run: |
-              cd ${{ env.HELM_REPO }}
               git config user.email "${{ env.EMAIL }}"
               git config user.name "${{ env.ORG }}"
               git remote set-url origin https://${{ env.ORG }}:${{ secrets.PERSONAL_TOKEN }}@github.com/${{ env.ORG }}/${{ env.HELM_REPO }}.git
