@@ -12,7 +12,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}
   ORG: lyzhang1999
   HELM_REPO: orders52-helm
-  EMAIL: h8r@h8r.io
+  EMAIL: 434533508@qq.com
 
 jobs:
   build-and-push-image:
