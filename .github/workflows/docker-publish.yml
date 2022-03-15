@@ -7,6 +7,9 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  ORG: lyzhang1999
+  HELM_REPO: orders52-helm
+  EMAIL: h8r@h8r.io
 
 jobs:
   build-and-push-image:
@@ -39,3 +42,23 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+      - name: Checkout Helm chart repo
+        id: checkout_helm
+        uses: actions/checkout@master
+        with:
+          name: ${{ env.ORG }}/${{ env.HELM_REPO }}
+          ref: refs/heads/main
+      - name: Update helm values
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq -i '.image.tag = "${{ steps.meta.outputs.tags }}"' '${{ env.HELM_REPO }}/values.yaml'
+      - name: Update helm repo
+        run: |
+              cd ${{ env.HELM_REPO }}
+              git config user.email "${{ env.EMAIL }}"
+              git config user.name "${{ env.ORG }}"
+              git remote set-url origin https://${{ env.ORG }}:${{ secret.PERSONAL_TOKEN }}@github.com/${{ env.ORG }}/${{ env.HELM_REPO }}.git
+              git add .
+              git commit -m "update images tag ${{ steps.meta.outputs.tags }}"
+              git push
+        
