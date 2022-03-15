@@ -64,6 +64,6 @@ jobs:
               git remote set-url origin https://${{ env.ORG }}:${{ secrets.PERSONAL_TOKEN }}@github.com/${{ env.ORG }}/${{ env.HELM_REPO }}.git
               git remote -vv
               git add .
-              git commit -m "update images tag ${{ steps.vars.outputs.tag }}
+              git commit -m "update images tag ${{ steps.vars.outputs.tag }}"
               git push
         
