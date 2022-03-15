@@ -53,16 +53,16 @@ jobs:
         with:
           repository: ${{ env.ORG }}/${{ env.HELM_REPO }}
           ref: refs/heads/main
+          token: ${{ secrets.PERSONAL_TOKEN }}
       - name: Update helm values
         uses: mikefarah/yq@master
         with:
           cmd: yq -i '.image.tag = "${{ steps.meta.outputs.tags }}"' 'values.yaml'
       - name: Update helm repo
         run: |
-              git config user.email "${{ env.EMAIL }}"
-              git config user.name "${{ env.ORG }}"
-              git remote set-url origin https://${{ env.ORG }}:${{ secrets.PERSONAL_TOKEN }}@github.com/${{ env.ORG }}/${{ env.HELM_REPO }}.git
-              git remote -vv
+              #git config user.email "${{ env.EMAIL }}"
+              #git config user.name "${{ env.ORG }}"
+              #git remote set-url origin https://${{ env.ORG }}:${{ secrets.PERSONAL_TOKEN }}@github.com/${{ env.ORG }}/${{ env.HELM_REPO }}.git
               git add .
               git commit -m "update images tag ${{ steps.vars.outputs.tag }}"
               git push
