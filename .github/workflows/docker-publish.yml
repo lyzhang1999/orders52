@@ -52,6 +52,8 @@ jobs:
         with:
           repository: ${{ env.ORG }}/${{ env.HELM_REPO }}
           ref: refs/heads/main
+          persist-credentials: false
+          fetch-depth: 0
       - name: Update helm values
         uses: mikefarah/yq@master
         with:
