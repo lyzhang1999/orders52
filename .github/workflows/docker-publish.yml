@@ -51,6 +51,9 @@ jobs:
         with:
           repository: ${{ env.ORG }}/${{ env.HELM_REPO }}
           ref: refs/heads/main
+      - name: ls
+        run: |
+            ls -al
       - name: Update helm values
         uses: mikefarah/yq@master
         with:
